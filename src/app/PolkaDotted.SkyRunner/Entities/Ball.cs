@@ -23,14 +23,12 @@ namespace PolkaDotted.SkyRunner.Entities
 		protected override void Load()
 		{
 			_body = BodyFactory.CreateCircle(World, _radius, _density, _position);
+			_body.IsStatic = false;
 		}
 
 		public override void Draw()
 		{
 			GL.Begin(PrimitiveType.Polygon);
-
-
-			var test = _body.GetWorldPoint(new Vector2(-_radius, -_radius)).ToDisplayTK();
 
 			GL.Color3(Color.MidnightBlue);
 			GL.Vertex2(_body.GetWorldPoint(new Vector2(-_radius, -_radius)).ToDisplayTK());

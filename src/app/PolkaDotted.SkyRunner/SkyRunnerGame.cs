@@ -22,8 +22,8 @@ namespace PolkaDotted.SkyRunner
 		public SkyRunnerGame(GameWindow game)
 		{
 			_game = game;
-			_farSeer = new World(new Vector2(0, 9));
-			ConvertUnits.SetDisplayUnitToSimUnitRatio(0.01f);
+			_farSeer = new World(Vector2.Zero);
+			ConvertUnits.SetDisplayUnitToSimUnitRatio(32f);
 
 			_enitities = new List<AEntity>();
 
@@ -34,10 +34,10 @@ namespace PolkaDotted.SkyRunner
 
 		private void Load()
 		{
-			_enitities.Add(new Ball(0, 0, 2));
+			_enitities.Add(new Ball(10, 13, 2));
 			_enitities.Add(new Ball(6, 6, 2));
-			_enitities.Add(new Ball(-6, -6, 2));
-			_enitities.Add(new ControllableBall(0, -6, 2));
+			_enitities.Add(new Ball(10, 20, 2));
+			_enitities.Add(new ControllableBall(20, 10, 2));
 
 			foreach (var enitity in _enitities)
 				enitity.Load(_farSeer, _game);
@@ -60,7 +60,19 @@ namespace PolkaDotted.SkyRunner
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
+			GL.Ortho(0, _game.Width, 0, _game.Height, 0, 10);
+
+			GL.Begin(PrimitiveType.Triangles);
+
+			GL.Color3(Color.MidnightBlue);
+			GL.Vertex2(-1.0f, 1.0f);
+			GL.Color3(Color.SpringGreen);
+			GL.Vertex2(0.0f, -1.0f);
+			GL.Color3(Color.Ivory);
+			GL.Vertex2(1.0f, 1.0f);
+
+			GL.End();
+
 
 			foreach (var enitity in _enitities)
 				enitity.Draw();

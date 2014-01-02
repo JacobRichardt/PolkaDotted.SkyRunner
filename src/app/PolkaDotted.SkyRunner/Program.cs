@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using System.Drawing;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace PolkaDotted.SkyRunner
@@ -9,11 +10,13 @@ namespace PolkaDotted.SkyRunner
 		{
 			using (var game = new GameWindow())
 			{
+				game.Location = new Point(30, 30);
+
 				game.Load += (sender, e) =>
 				{
 					game.VSync = VSyncMode.On;
 					game.Width = 1600;
-					game.Height = 1000;
+					game.Height = 900;
 				};
 
 				game.Resize += (sender, e) =>

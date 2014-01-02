@@ -1,5 +1,6 @@
 ﻿using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
 namespace PolkaDotted.SkyRunner.Entities
@@ -13,15 +14,12 @@ namespace PolkaDotted.SkyRunner.Entities
 		public override void Update()
 		{
 			base.Update();
-
+			
 			if (Game.Keyboard[Key.Left])
-				_body.ApplyForce(new Vector2(-1, 0));
+				_body.ApplyForce(_body.GetWorldVector(new Vector2(0, 50)), _body.GetWorldPoint(new Vector2(-_radius, 0)));
+
 			if (Game.Keyboard[Key.Right])
-				_body.ApplyForce(new Vector2(1, 0));
-			if (Game.Keyboard[Key.Up])
-				_body.ApplyForce(new Vector2(0, -1));
-			if (Game.Keyboard[Key.Down])
-				_body.ApplyForce(new Vector2(0, 1));
+				_body.ApplyForce(_body.GetWorldVector(new Vector2(0, 50)), _body.GetWorldPoint(new Vector2(_radius, 0)));
 		}
 	}
 }
