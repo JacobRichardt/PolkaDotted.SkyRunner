@@ -39,11 +39,14 @@ namespace PolkaDotted.SkyRunner
 
 		private void Load()
 		{
-			AddEntity(new Ball(10, 13, 2));
-			AddEntity(new Ball(6, 6, 2));
-			AddEntity(new Ball(10, 20, 2));
+			var rnd = new Random();
 
-			var player = new ControllableBall(20, 10, 2);
+			for (int i = 0; i < 200; i++)
+			{
+				AddEntity(new Ball((float)rnd.NextDouble() * 30, (float)rnd.NextDouble() * 15, 0.3f));
+			}
+
+			var player = new PlayerShip(20, 10);
 
 			AddEntity(player);
 

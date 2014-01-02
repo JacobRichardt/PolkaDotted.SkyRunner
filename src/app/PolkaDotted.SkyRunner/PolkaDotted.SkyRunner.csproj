@@ -35,7 +35,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Entities\AEntity.cs" />
     <Compile Include="Entities\Ball.cs" />
-    <Compile Include="Entities\ControllableBall.cs" />
+    <Compile Include="Entities\PlayerShip.cs" />
     <Compile Include="Entities\IFollowableEntity.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
