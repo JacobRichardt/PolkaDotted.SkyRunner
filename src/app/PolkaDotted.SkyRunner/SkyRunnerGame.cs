@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using FarseerPhysics;
 using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
@@ -14,41 +12,50 @@ namespace PolkaDotted.SkyRunner
 {
 	public class SkyRunnerGame : IDisposable
 	{
-		private readonly GameWindow _game;
-		private readonly World _farSeer;
-
+		private readonly GameWindow _gameWindow;
+		private readonly World _world;
+		private readonly Camera _camera;
 		private readonly IList<AEntity> _enitities;
 
-		public SkyRunnerGame(GameWindow game)
+		public SkyRunnerGame(GameWindow gameWindow)
 		{
-			_game = game;
-			_farSeer = new World(Vector2.Zero);
+			_gameWindow = gameWindow;
+			_world = new World(Vector2.Zero);
 			ConvertUnits.SetDisplayUnitToSimUnitRatio(32f);
-
+			_camera = new Camera(_gameWindow);
 			_enitities = new List<AEntity>();
 
-			_game.Load += (o, args) => Load();
-			_game.UpdateFrame += (o, args) => Update();
-			_game.RenderFrame += (sender, e) => Render();
+			_gameWindow.Load += (o, args) => Load();
+			_gameWindow.UpdateFrame += (o, args) => Update();
+			_gameWindow.RenderFrame += (sender, e) => Render();
+		}
+
+		public void AddEntity(AEntity entity)
+		{
+			entity.Load(_world, _gameWindow);
+
+			_enitities.Add(entity);
 		}
 
 		private void Load()
 		{
-			_enitities.Add(new Ball(10, 13, 2));
-			_enitities.Add(new Ball(6, 6, 2));
-			_enitities.Add(new Ball(10, 20, 2));
-			_enitities.Add(new ControllableBall(20, 10, 2));
+			AddEntity(new Ball(10, 13, 2));
+			AddEntity(new Ball(6, 6, 2));
+			AddEntity(new Ball(10, 20, 2));
 
-			foreach (var enitity in _enitities)
-				enitity.Load(_farSeer, _game);
+			var player = new ControllableBall(20, 10, 2);
+
+			AddEntity(player);
+
+			_camera.SetTarget(player);
 		}
 
 		private void Update()
 		{
-			if (_game.Keyboard[Key.Escape])
-				_game.Exit();
+			if (_gameWindow.Keyboard[Key.Escape])
+				_gameWindow.Exit();
 
-			_farSeer.Step((float)_game.TargetUpdatePeriod);
+			_world.Step((float)_gameWindow.TargetUpdatePeriod);
 
 			foreach (var enitity in _enitities)
 				enitity.Update();
@@ -57,27 +64,15 @@ namespace PolkaDotted.SkyRunner
 		private void Render()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.Ortho(0, _game.Width, 0, _game.Height, 0, 10);
-
-			GL.Begin(PrimitiveType.Triangles);
-
-			GL.Color3(Color.MidnightBlue);
-			GL.Vertex2(-1.0f, 1.0f);
-			GL.Color3(Color.SpringGreen);
-			GL.Vertex2(0.0f, -1.0f);
-			GL.Color3(Color.Ivory);
-			GL.Vertex2(1.0f, 1.0f);
-
-			GL.End();
-
+			
+			_camera.Update();
 
 			foreach (var enitity in _enitities)
 				enitity.Draw();
 
-			_game.SwapBuffers();
+			_gameWindow.SwapBuffers();
 		}
 
 		public void Dispose()

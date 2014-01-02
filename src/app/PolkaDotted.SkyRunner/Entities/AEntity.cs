@@ -1,19 +1,17 @@
-﻿using System.Runtime.CompilerServices;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using OpenTK;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace PolkaDotted.SkyRunner.Entities
 {
 	public abstract class AEntity
 	{
 		protected World World { get; set; }
-		protected GameWindow Game { get; set; }
+		protected GameWindow GameWindow { get; set; }
 
-		public void Load(World world, GameWindow game)
+		public void Load(World world, GameWindow gameWindow)
 		{
 			World = world;
-			Game = game;
+			GameWindow = gameWindow;
 			Load();
 		}
 

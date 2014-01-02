@@ -32,9 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Entities\AEntity.cs" />
     <Compile Include="Entities\Ball.cs" />
     <Compile Include="Entities\ControllableBall.cs" />
+    <Compile Include="Entities\IFollowableEntity.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
