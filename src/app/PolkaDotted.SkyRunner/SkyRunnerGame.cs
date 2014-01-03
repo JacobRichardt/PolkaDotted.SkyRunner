@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using FarseerPhysics;
 using FarseerPhysics.Dynamics;
 using OpenTK;
@@ -46,7 +47,7 @@ namespace PolkaDotted.SkyRunner
 				AddEntity(new Ball((float)rnd.NextDouble() * 30, (float)rnd.NextDouble() * 15, 0.3f));
 			}
 
-			var player = new PlayerShip(20, 10);
+			var player = new PlayerShip(20, 10, this);
 
 			AddEntity(player);
 
@@ -60,8 +61,16 @@ namespace PolkaDotted.SkyRunner
 
 			_world.Step((float)_gameWindow.TargetUpdatePeriod);
 
-			foreach (var enitity in _enitities)
-				enitity.Update();
+			var index = 0;
+			while (index < _enitities.Count)
+			{
+				_enitities[index].Update();
+
+				if (_enitities[index].IsDisposed)
+					_enitities.RemoveAt(index);
+				else
+					index++;
+			}
 		}
 
 		private void Render()

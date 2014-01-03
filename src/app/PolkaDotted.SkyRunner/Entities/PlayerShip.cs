@@ -14,11 +14,13 @@ namespace PolkaDotted.SkyRunner.Entities
 	{
 		public Vector2 FollowPoint { get; private set; }
 
+		private readonly SkyRunnerGame _skyRunnerGame;
 		protected Vector2 _position;
 		protected Body _body;
 
-		public PlayerShip(float x, float y)
+		public PlayerShip(float x, float y, SkyRunnerGame skyRunnerGame)
 		{
+			_skyRunnerGame = skyRunnerGame;
 			_position = new Vector2(x, y);
 		}
 
@@ -34,7 +36,7 @@ namespace PolkaDotted.SkyRunner.Entities
 				new Vector2(0, 4)
 			});
 
-			_body = BodyFactory.CreatePolygon(World, vertices, .5f, _position);
+			_body = BodyFactory.CreatePolygon(World, vertices, 10f, _position);
 			_body.BodyType = BodyType.Dynamic;
 		}
 
@@ -56,12 +58,24 @@ namespace PolkaDotted.SkyRunner.Entities
 		public override void Update()
 		{
 			if (GameWindow.Keyboard[Key.Left])
-				_body.ApplyForce(_body.GetWorldVector(new Vector2(0, 30)), _body.GetWorldPoint(new Vector2(-2, 0)));
+				FireEngine(new Vector2(-2f, -.2f), new Vector2(0, 300));
 
 			if (GameWindow.Keyboard[Key.Right])
-				_body.ApplyForce(_body.GetWorldVector(new Vector2(0, 30)), _body.GetWorldPoint(new Vector2(2, 0)));
+				FireEngine(new Vector2(2, -.2f), new Vector2(0, 300));
 
 			FollowPoint = _body.Position;
+		}
+
+		public void FireEngine(Vector2 position, Vector2 power)
+		{
+			var worldPosition = _body.GetWorldPoint(position);
+			var worldPower = _body.GetWorldVector(power);
+
+			_body.ApplyForce(worldPower, worldPosition);
+
+			power.Y = -power.Y;
+
+			_skyRunnerGame.AddEntity(new Flame(worldPosition, _body.GetWorldVector(power * .1f)));
 		}
 	}
 }
