@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -57,11 +59,16 @@ namespace PolkaDotted.SkyRunner.Entities
 
 		public override void Update()
 		{
-			if (GameWindow.Keyboard[Key.Left])
-				FireEngine(new Vector2(-2f, -.2f), new Vector2(0, 300));
+			var state = GamePad.GetState(0);
 
-			if (GameWindow.Keyboard[Key.Right])
-				FireEngine(new Vector2(2, -.2f), new Vector2(0, 300));
+			if (state.IsConnected)
+			{
+				if (state.Triggers.Left > 0)
+					FireEngine(new Vector2(-2f, -.2f), new Vector2(0, state.Triggers.Left * 128 * 300));
+
+				if ( GamePad.GetState(0).Triggers.Right > 0)
+					FireEngine(new Vector2(2, -.2f), new Vector2(0, state.Triggers.Right * 128 * 300));
+			}
 
 			FollowPoint = _body.Position;
 		}
@@ -75,7 +82,7 @@ namespace PolkaDotted.SkyRunner.Entities
 
 			power.Y = -power.Y;
 
-			_skyRunnerGame.AddEntity(new Flame(worldPosition, _body.GetWorldVector(power * .1f)));
+			_skyRunnerGame.AddEntity(new Flame(worldPosition, _body.GetWorldVector(power * .05f)));
 		}
 	}
 }
