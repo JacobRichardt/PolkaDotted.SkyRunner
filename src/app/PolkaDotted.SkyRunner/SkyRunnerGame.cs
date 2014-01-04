@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using FarseerPhysics;
 using FarseerPhysics.Dynamics;
@@ -58,6 +59,8 @@ namespace PolkaDotted.SkyRunner
 		{
 			if (_gameWindow.Keyboard[Key.Escape])
 				_gameWindow.Exit();
+
+			Debug.WriteLine(_gameWindow.UpdatePeriod);
 
 			_world.Step((float)_gameWindow.TargetUpdatePeriod);
 

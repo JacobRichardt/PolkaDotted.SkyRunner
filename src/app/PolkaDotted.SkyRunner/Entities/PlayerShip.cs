@@ -31,10 +31,8 @@ namespace PolkaDotted.SkyRunner.Entities
 			var vertices = new Vertices(new List<Vector2>
 			{
 				new Vector2(0, 4),
-				new Vector2(1, 1),
 				new Vector2(2, 0),
 				new Vector2(-2, 0),
-				new Vector2(1, 1),
 				new Vector2(0, 4)
 			});
 
@@ -66,11 +64,22 @@ namespace PolkaDotted.SkyRunner.Entities
 				if (state.Triggers.Left > 0)
 					FireEngine(new Vector2(-2f, -.2f), new Vector2(0, state.Triggers.Left * 128 * 300));
 
-				if ( GamePad.GetState(0).Triggers.Right > 0)
+				if ( state.Triggers.Right > 0)
 					FireEngine(new Vector2(2, -.2f), new Vector2(0, state.Triggers.Right * 128 * 300));
+
+				if (state.Buttons.A == ButtonState.Pressed)
+					Shoot();
 			}
 
 			FollowPoint = _body.Position;
+		}
+
+		private void Shoot()
+		{
+			var worldPosition = _body.GetWorldPoint(new Vector2(0, 4.2f));
+			var worldPower = _body.GetWorldVector(new Vector2(0, 100));
+
+			_skyRunnerGame.AddEntity(new Bullet(worldPosition, worldPower));
 		}
 
 		public void FireEngine(Vector2 position, Vector2 power)
